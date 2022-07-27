@@ -1,0 +1,94 @@
+* {
+    font-family: sans-serif;
+    box-sizing: border-box;
+    font-size: 16px;
+    padding: 0;
+    margin: 0;
+}
+
+.table-title {
+    background-color: #299be4;
+    color: #fff;
+    padding: 16px 30px;
+    border-radius: 3px 3px 0 0;
+}
+
+.container-xxl, .container-xl, .container-lg, .container-md, .container-sm, .container {
+    max-width: 1320px !important;
+}
+
+.table-title h1 {
+    font-size: 2.3rem;
+    font-weight: bold;
+}
+
+.table-title .btn {
+    float: right;
+    min-width: 50px;
+    outline: none !important;
+    margin: 10px 0 0 10px;
+}
+
+.table th {
+    color: #fff;
+}
+
+.table th, .table td {
+    padding: 0.75rem;
+    text-align: center;
+    border: none;
+}
+
+ .table td:nth-child(7){
+    border-left: 2px solid #cfcfcf;
+}
+.table tbody {
+    vertical-align: inherit;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+#frmCreateCustomer label {
+    font-weight: bold;
+    padding-left: 5px;
+}
+
+.row-form {
+    margin-top: 20px;
+}
+
+.icon {
+    padding: 0 5px !important;
+    line-height: 10px;
+    margin: 10px 0 0 15px;
+    float: left;
+    flex-direction: row-reverse;
+}
+.action {
+    line-height: 10px;
+    margin: 0 10px;
+}
+.listuser {
+    margin: 0;
+    padding: 0 !important;
+    float: right;
+    width: 80%;
+}
+.footer {
+    position: relative;
+}
+.btn-search {
+    margin-right: 20px;
+}
+.pagging {
+    padding: 10px 13px;
+    color: #ffb900;
+    font-size: 18px;
+}
+.pagging:hover {
+    background-color: #e5e5e5;
+    border-radius: 3px;
+    color: #017255;
+}
