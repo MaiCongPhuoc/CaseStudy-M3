@@ -39,6 +39,7 @@ public class ProductServlet extends HttpServlet {
     public void init() throws ServletException {
         productDAO = new ProductDAO();
     }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = "";
@@ -98,7 +99,7 @@ public class ProductServlet extends HttpServlet {
     }
 
     private void showProduct(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, SQLException {
-        List<Product> listProduct = productDAO.selectAllProduct();
+        List<Product> listProduct = productDAO.selectallProduct();
         req.setAttribute("listProduct", listProduct);
 //        Locale lc = new Locale("ENGLISH","US");
 //        NumberFormat nf = NumberFormat.getCurrencyInstance(lc);

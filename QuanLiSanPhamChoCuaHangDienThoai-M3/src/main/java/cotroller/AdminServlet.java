@@ -41,9 +41,6 @@ public class AdminServlet extends HttpServlet {
         if (this.getServletContext().getAttribute("listCountry") == null) {
             this.getServletContext().setAttribute("listCountry", iCountryDAO.selectAllCountry());
         }
-        if (this.getServletContext().getAttribute("listRole") == null) {
-            this.getServletContext().setAttribute("listRole", roleDAO.selectAllRole());
-        }
     }
 
     @Override
@@ -210,7 +207,8 @@ public class AdminServlet extends HttpServlet {
                     fileName = new File(fileName).getName();
                     // lưu file ở hệ thống mặc định C:\Users\ADMIN/Uploads
 //                part.write(this.getFolderUpload().getAbsolutePath() + File.separator + fileName);
-                    if (!fileName.isEmpty() && (fileName.contains(".jpg") || fileName.contains(".png") || fileName.contains(".jpg"))) {
+                    if (!fileName.isEmpty() && (fileName.contains(".jpeg") || fileName.contains(".png")
+                            || fileName.contains(".jpg") || fileName.contains(".gif"))) {
                         // duong dan tren Intellij E:\Servlet\TemplateAdmin\src\main\webapp\image + tên file(filename)
                         part.write("E:\\Servlet\\TemplateAdmin\\src\\main\\webapp\\image\\" + fileName);
 
@@ -221,7 +219,7 @@ public class AdminServlet extends HttpServlet {
                         part.write(serverRealParth);
                         user.setImage("\\image\\" + fileName);
                     } else {
-                        req.setAttribute("errorImage", "photo cannot be blank");
+                        req.setAttribute("errorImage", "image cannot be blank and must be .JPEG, .PNG .JPG, .GIF extension");
 //                        req.getRequestDispatcher("/WEB-INF/admin/product/add-product.jsp").forward(req, resp);
                     }
                 }
@@ -346,9 +344,9 @@ public class AdminServlet extends HttpServlet {
             int id = Integer.parseInt(req.getParameter("id"));
             user.setIdUser(id);
             String name = req.getParameter("userName");
-            user.setUserName(name);
+            user.setUserName(name.replace(" ",""));
             String password = req.getParameter("password");
-            user.setPassword(password);
+            user.setPassword(password.replace(" ",""));
             String email = req.getParameter("email");
             user.setEmail(email);
             int idCountry = Integer.parseInt(req.getParameter("country"));
@@ -357,10 +355,6 @@ public class AdminServlet extends HttpServlet {
             user.setPhone(phone);
             int role = Integer.parseInt(req.getParameter("role"));
             user.setIdRole(role);
-            if (!userDAO.isPhoneValid(phone)) {
-                flag = false;
-                req.setAttribute("errorPhone", "The phone number must start from 0 and have 10 digits");
-            }
 
             ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
             Validator validator = validatorFactory.getValidator();
@@ -376,17 +370,12 @@ public class AdminServlet extends HttpServlet {
                 }
                 errors += "</ul>";
                 req.setAttribute("user", user);
+                req.setAttribute("edit", "edit");
                 req.setAttribute("errors", errors);
                 req.setAttribute("errorsCreate", "return $.extend($.gritter.options, { position: 'bottom-right' }), $.gritter.add({ title: 'Error!', text: 'You modified information failed!', class_name: 'color danger' }), !1;");
                 System.out.println(this.getClass() + " !constraintViolations.isEmpty()");
                 req.getRequestDispatcher("/WEB-INF/admin/user/create.jsp").forward(req, resp);
             } else {
-                if (userDAO.selectUserByEmail(email) != null) {
-                    flag = false;
-                    hasMap.put("email", "Email already exists!");
-                    req.setAttribute("errorEmail1", "Email already exists!");
-                    System.out.println(this.getClass() + " Email exits in database");
-                }
                 if (iCountryDAO.selectCountry(idCountry) == null) {
                     flag = false;
                     hasMap.put("country", "Country value invalid");
@@ -411,6 +400,7 @@ public class AdminServlet extends HttpServlet {
                     errors += "</ul>";
                     req.setAttribute("user", user);
                     req.setAttribute("errors", errors);
+                    req.setAttribute("edit", "edit");
                     System.out.println(this.getClass() + " error database and country");
                     req.getRequestDispatcher("/WEB-INF/admin/user/create.jsp").forward(req, resp);
                 }
@@ -422,6 +412,7 @@ public class AdminServlet extends HttpServlet {
                     + "</ul>";
             req.setAttribute("user", user);
             req.setAttribute("errors", errors);
+            req.setAttribute("edit", "edit");
             req.getRequestDispatcher("/WEB-INF/admin/user/create.jsp").forward(req, resp);
         } catch (Exception e) {
             e.printStackTrace();

@@ -20,11 +20,8 @@ public class ProductDAO implements IProductDAO {
     private int noOfRecords;
     private static final String SELECT_ALL_PRODUCTS = "select * from products;";
     private static final String DELETE_PRODUCTS_SQL = "delete from products where id = ?;";
-    private static final String SELECT_PRODUCTS_BY_EMAIL = "select u.idUser, u.image, u.userName, u.password, u.idRole, u.email, u.idCountry, u.phone " +
-            "from products as u inner join country as c " +
-            "where u.email = ? and u.idCountry = c.id;";
-    private static final String INSERT_PRODUCTS_SQL = "INSERT INTO products (image, productName, price, quantity, description) VALUES " +
-            " (?, ?, ?, ?,?);";
+    private static final String SELECT_PRODUCTS_BY_EMAIL = "select u.idUser, u.image, u.userName, u.password, u.idRole, u.email, u.idCountry, u.phone " + "from products as u inner join country as c " + "where u.email = ? and u.idCountry = c.id;";
+    private static final String INSERT_PRODUCTS_SQL = "INSERT INTO products (image, productName, price, quantity, description) VALUES " + " (?, ?, ?, ?,?);";
     private static final String SELECT_PRODUCTS_BY_ID = "select id,image,productName, price, quantity, description from products where id =?;";
     private static final String UPDATE_PRODUCTS_SQL = "update products set image = ?, productName = ?, price = ?, quantity = ?, description = ? where id = ?;";
 
@@ -50,8 +47,7 @@ public class ProductDAO implements IProductDAO {
 
     @Override
     public void insertProduct(Product product) throws SQLException {
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PRODUCTS_SQL)) {
+        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PRODUCTS_SQL)) {
             preparedStatement.setString(1, product.getImage());
             preparedStatement.setString(2, product.getProductName());
             preparedStatement.setDouble(3, product.getPrice());
@@ -95,15 +91,14 @@ public class ProductDAO implements IProductDAO {
     @Override
     public List<Product> selectAllProduct() {
         List<Product> listProduct = new ArrayList<>();
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_PRODUCTS)) {
+        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_PRODUCTS)) {
             System.out.println(this.getClass() + "selectAllProduct: " + preparedStatement);
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String image = rs.getString("image");
                 String productName = rs.getString("productName");
-                double price =  rs.getDouble("price");
+                double price = rs.getDouble("price");
                 double quantity = rs.getDouble("quantity");
                 String description = rs.getString("description");
                 listProduct.add(new Product(id, image, productName, price, quantity, description));
@@ -118,8 +113,7 @@ public class ProductDAO implements IProductDAO {
     @Override
     public boolean deleteProduct(int id) throws SQLException {
         boolean rowDele;
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_PRODUCTS_SQL)) {
+        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(DELETE_PRODUCTS_SQL)) {
             preparedStatement.setInt(1, id);
             rowDele = preparedStatement.executeUpdate() > 0;
         }
@@ -127,8 +121,7 @@ public class ProductDAO implements IProductDAO {
     }
 
     public boolean findProductName(String name) throws SQLException {
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_PRODUCTNAME)) {
+        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(SELECT_PRODUCTNAME)) {
             System.out.println(this.getClass() + "findProductName: " + preparedStatement);
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
@@ -140,19 +133,19 @@ public class ProductDAO implements IProductDAO {
         return false;
     }
 
-        public List<Product> findProductNameAndPrice(String name, int price) throws SQLException, NumberFormatException {
+    public List<Product> findProductNameAndPrice(String name, int price) throws SQLException, NumberFormatException {
         String query = "";
         List<Product> listProduct = new ArrayList<>();
         Product product = null;
         Connection connection = getConnection();
         try {
-            if (name.isEmpty() || name == null){
+            if (name.isEmpty() || name == null) {
                 query = "select * from products where price like ?";
                 stmt = connection.prepareStatement(query);
                 System.out.println(this.getClass() + "findProductName: " + stmt);
                 stmt.setInt(1, '%' + price + '%');
                 System.out.println(stmt);
-            } else if (price == 0){
+            } else if (price == 0) {
                 query = "select * from products where productName like ?";
                 stmt = connection.prepareStatement(query);
                 System.out.println(this.getClass() + "findProductName: " + stmt);
@@ -216,16 +209,13 @@ public class ProductDAO implements IProductDAO {
             }
             rs.close();
             rs = stmt.executeQuery("SELECT FOUND_ROWS()");
-            if (rs.next())
-                this.noOfRecords = rs.getInt(1);
+            if (rs.next()) this.noOfRecords = rs.getInt(1);
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             try {
-                if (stmt != null)
-                    stmt.close();
-                if (connection != null)
-                    connection.close();
+                if (stmt != null) stmt.close();
+                if (connection != null) connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -265,27 +255,25 @@ public class ProductDAO implements IProductDAO {
             rs.close();
 
             rs = stmt.executeQuery("SELECT FOUND_ROWS()");
-            if (rs.next())
-                this.noOfRecords = rs.getInt(1);
+            if (rs.next()) this.noOfRecords = rs.getInt(1);
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             try {
-                if (stmt != null)
-                    stmt.close();
-                if (connection != null)
-                    connection.close();
+                if (stmt != null) stmt.close();
+                if (connection != null) connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
         return listProduct;
     }
+
     public String convertDollar(double price) {
-        Locale lc = new Locale("ENGLISH","US");
+        Locale lc = new Locale("ENGLISH", "US");
         NumberFormat nf = NumberFormat.getCurrencyInstance(lc);
 
-        String formatMoney =  nf.format(price);
+        String formatMoney = nf.format(price);
         return formatMoney;
     }
 
@@ -319,6 +307,47 @@ public class ProductDAO implements IProductDAO {
                     t = t.getCause();
                 }
             }
+        }
+    }
+
+//    Sử dụng CallableStatement
+
+    public List<Product> selectallProduct() {
+        List<Product> listProduct = new ArrayList<>();
+        try (Connection connection = getConnection(); CallableStatement callableStatement = connection.prepareCall("{call selectproducts}")) {
+            System.out.println(this.getClass() + "selectallProduct: " + callableStatement);
+            callableStatement.executeQuery();
+            ResultSet rs = callableStatement.getResultSet();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String image = rs.getString("image");
+                String productName = rs.getString("productName");
+                double price = rs.getDouble("price");
+                double quantity = rs.getDouble("quantity");
+                String description = rs.getString("description");
+                listProduct.add(new Product(id, image, productName, price, quantity, description));
+            }
+
+        } catch (SQLException e) {
+            printSQLException(e);
+        }
+        return listProduct;
+    }
+
+    public void insertproduct(Product product) throws SQLException {
+        try (Connection connection = getConnection();
+             CallableStatement callableStatement = connection.prepareCall("{call insertproducts(?,?,?,?,?)}")) {
+            callableStatement.setString(1, product.getImage());
+            callableStatement.setString(2, product.getProductName());
+            callableStatement.setDouble(3, product.getPrice());
+            callableStatement.setDouble(4, product.getQuantity());
+            callableStatement.setString(5, product.getDescription());
+
+            System.out.println(this.getClass() + " insertProduct: " + callableStatement);
+
+            callableStatement.executeUpdate();
+        } catch (SQLException e) {
+            printSQLException(e);
         }
     }
 }
